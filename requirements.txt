@@ -1,0 +1,6 @@
+transformers
+shap
+fastapi
+uvicorn
+pytorch
+torchvision
