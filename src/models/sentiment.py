@@ -4,11 +4,25 @@ this text as positive/negative. `cardiffnlp/twitter-roberta-base-sentiment`
 from Huggingface is the default model.
 """
 import shap
-from typing import Tuple, Dict
+import json
+from typing import Tuple, Dict, List
 from transformers import pipeline
+from pydantic import BaseModel
 
 
 MODEL = "cardiffnlp/twitter-roberta-base-sentiment"
+
+
+class SentimentPredictResponse(BaseModel):
+    label: str
+    score: float
+
+
+class SentimentExplainResponse(BaseModel):
+    text: List[str]
+    negative: List[float]
+    neutral: List[float]
+    positive: List[float]
 
 
 class Sentiment:
@@ -32,16 +46,16 @@ class Sentiment:
         self.explainer = shap.Explainer(self.pipeline)
 
     def __translate_result(self, label: str):
-        t = {"LABEL_0": "Negative", "LABEL_1": "Neutral", "LABEL_2": "Positive"}
+        t = {"LABEL_0": "negative", "LABEL_1": "neutral", "LABEL_2": "positive"}
         return t[label]
 
-    def predict(self, data: str) -> Tuple[str, float]:
+    def predict(self, data: str) -> SentimentPredictResponse:
         result = self.pipeline(data)
         label = self.__translate_result(result[0]["label"])
         score = result[0]["score"]
-        return label, score
+        return SentimentPredictResponse(label=label, score=score)
 
-    def explain(self, data: str) -> Dict:
+    def explain(self, data: str) -> SentimentExplainResponse:
         labels = ["negative", "neutral", "positive"]
         shapley_values = self.explainer([data])
 
@@ -49,4 +63,4 @@ class Sentiment:
         for i, label in enumerate(labels):
             res[label] = shapley_values.values[0, :, i].tolist()
 
-        return res
+        return SentimentExplainResponse.parse_raw(json.dumps(res))
