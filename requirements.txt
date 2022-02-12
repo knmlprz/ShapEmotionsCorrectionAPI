@@ -2,7 +2,7 @@ transformers
 shap
 fastapi
 uvicorn
-pytorch
+torch
 torchvision
 pytest
 python-dotenv
