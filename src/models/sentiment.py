@@ -64,3 +64,7 @@ class Sentiment:
             res[label] = shapley_values.values[0, :, i].tolist()
 
         return SentimentExplainResponse.parse_raw(json.dumps(res))
+
+
+if __name__ == "__main__":
+    Sentiment()
