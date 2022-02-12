@@ -1,3 +1,6 @@
+import os
+
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
@@ -8,8 +11,15 @@ from src.models.sentiment import (
     SentimentExplainResponse,
 )
 
+# Load .env file
+load_dotenv()
+COMPUTE_DEVICE = int(os.getenv('COMPUTE_DEVICE'))
+
+
+# Create app
 app = FastAPI()
 
+# Allow CORS
 origins = ["*"]
 
 app.add_middleware(
@@ -20,7 +30,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-sentiment = Sentiment(device=0)
+# Configure compute device
+sentiment = Sentiment(device=COMPUTE_DEVICE)
 
 
 class Text(BaseModel):
