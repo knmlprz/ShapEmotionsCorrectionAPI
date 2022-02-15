@@ -6,3 +6,4 @@ torch
 torchvision
 pytest
 python - dotenv
+locust
