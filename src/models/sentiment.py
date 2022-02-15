@@ -45,7 +45,7 @@ class Sentiment:
         self.explainer = shap.Explainer(self.pipeline)
 
     def __translate_result(self, label: str):
-        t = {"NEGATIVE": "negative", "POSITIVE": "posive"}
+        t = {"NEGATIVE": "negative", "POSITIVE": "positive"}
         return t[label]
 
     def predict(self, data: str) -> SentimentPredictResponse:
