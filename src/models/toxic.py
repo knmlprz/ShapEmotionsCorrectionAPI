@@ -5,5 +5,3 @@ Huggingface.
 
 For more info: https://github.com/knmlprz/BITEHack/blob/main/Presentation.ipynb
 """
-
-

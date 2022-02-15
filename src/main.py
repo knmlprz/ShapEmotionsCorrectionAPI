@@ -1,5 +1,5 @@
 import os
-
+import torch
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from pydantic import BaseModel
@@ -13,8 +13,11 @@ from src.models.sentiment import (
 
 # Load .env file
 load_dotenv()
-COMPUTE_DEVICE = int(os.getenv('COMPUTE_DEVICE'))
+COMPUTE_DEVICE = int(os.getenv("COMPUTE_DEVICE"))
 
+# Settings
+torch.set_grad_enabled(False)
+torch.set_num_threads(1)
 
 # Create app
 app = FastAPI()

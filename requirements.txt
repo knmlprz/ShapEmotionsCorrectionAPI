@@ -5,4 +5,4 @@ uvicorn
 torch
 torchvision
 pytest
-python-dotenv
+python - dotenv
