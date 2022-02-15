@@ -10,7 +10,7 @@ from transformers import pipeline
 from pydantic import BaseModel
 
 
-MODEL = "cardiffnlp/twitter-roberta-base-sentiment"
+MODEL = "distilbert-base-uncased-finetuned-sst-2-english"
 
 
 class SentimentPredictResponse(BaseModel):
@@ -21,7 +21,6 @@ class SentimentPredictResponse(BaseModel):
 class SentimentExplainResponse(BaseModel):
     text: List[str]
     negative: List[float]
-    neutral: List[float]
     positive: List[float]
 
 
@@ -46,7 +45,7 @@ class Sentiment:
         self.explainer = shap.Explainer(self.pipeline)
 
     def __translate_result(self, label: str):
-        t = {"LABEL_0": "negative", "LABEL_1": "neutral", "LABEL_2": "positive"}
+        t = {"NEGATIVE": "negative", "POSITIVE": "posive"}
         return t[label]
 
     def predict(self, data: str) -> SentimentPredictResponse:
@@ -56,7 +55,7 @@ class Sentiment:
         return SentimentPredictResponse(label=label, score=score)
 
     def explain(self, data: str) -> SentimentExplainResponse:
-        labels = ["negative", "neutral", "positive"]
+        labels = ["negative", "positive"]
         shapley_values = self.explainer([data])
 
         res = {"text": shapley_values.data[0].tolist()}
